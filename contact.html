@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact RDIY in Freetown, Sierra Leone about partnerships, volunteering, programs, and youth development initiatives.">
+    <title>Contact us - Restoration & Development Initiative for Youth</title>
+    <link rel="icon" href="img/rdiy-logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="header-container">
+        <div class="logo">
+            <a href="index.html" aria-label="RDIY home">
+                <img src="img/RDIY LOGO.png" alt="RDIY logo" width="1254" height="1254">
+            </a>
+        </div>
+        <nav class="nav" id="nav" aria-label="Primary navigation">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="program.html">Programs</a></li>
+                <li><a href="project.html">Projects</a></li>
+                <li><a href="donate.html">Donate</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="btn">
+            <a href="donate.html#donation-form">Donate Now &nbsp;<i class="fas fa-donate"></i></a>
+        </div>
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-controls="nav" aria-expanded="false" aria-label="Open navigation menu">☰</button>
+    </header>
+    <main id="main-content">
+    <section class="contact-hero">
+        <div class="container">
+            <span>Contact Us</span>
+            <h1>
+                Get In Touch With RDIY
+            </h1>
+            <p>
+                We welcome inquiries from donors, partners, volunteers,
+                stakeholders, and community members interested in supporting
+                youth empowerment and sustainable development initiatives.
+            </p>
+        </div>  
+    </section>
+    <section class="contact-info">
+        <div class="container">
+            <div class="section-heading">
+                <span>Contact Information</span>
+                <h2>
+                    Let's Connect
+                </h2>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <h3>
+                        Office Address
+                    </h3>
+                    <p>
+                        Sir Samuel Lewis Road,
+                        Aberdeen,
+                        Freetown,
+                        Sierra Leone
+                    </p>
+                </div>
+                <div class="contact-card">
+                    <h3>
+                        Phone Number
+                    </h3>
+                    <p><a href="tel:+23272246411">+232 72 246 411</a></p>
+                </div>
+                <div class="contact-card">
+                    <h3>
+                        Email Address
+                    </h3>
+                    <p><a href="mailto:info.rdiy@gmail.com">info.rdiy@gmail.com</a></p>
+                </div>
+                <div class="contact-card">
+                    <h3>
+                        Working Hours
+                    </h3>
+                    <p>
+                        Monday - Friday
+                        <br>
+                        9:00 AM - 5:00 PM
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="contact-form-section" id="contact-form-section">
+        <div class="container">
+            <div class="contact-wrapper">
+                <div class="form-content">
+                    <span>Send A Message</span>
+                    <h2>
+                        We'd Love To Hear From You
+                    </h2>
+                    <p>
+                        Complete the form below and a member of our team
+                        will get back to you as soon as possible.
+                    </p>
+                </div>
+                <div class="contact-form">
+                    <p class="form-notice" id="contact-notice">
+                        Your message will be stored and sent to the RDIY team. Please do not include passwords, payment credentials, or highly sensitive personal information. See our <a href="privacy.html">privacy notice</a>.
+                    </p>
+                    <form action="/api/contact" method="post" data-api-form="contact" aria-describedby="contact-notice contact-status">
+                        <div class="form-trap" aria-hidden="true">
+                            <label for="contact-website">Website</label>
+                            <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                        </div>
+                        <div>
+                            <label for="contact-name">
+                                Full Name
+                            </label>
+                            <input
+                                id="contact-name"
+                                name="fullName"
+                                type="text"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                maxlength="120"
+                                required
+                            >
+                        </div>
+                        <div>
+                            <label for="contact-email">
+                                Email Address
+                            </label>
+                            <input
+                                id="contact-email"
+                                name="email"
+                                type="email"
+                                placeholder="Enter your email address"
+                                autocomplete="email"
+                                maxlength="254"
+                                required
+                            >
+                        </div>
+                        <div>
+                            <label for="contact-phone">
+                                Phone Number
+                            </label>
+                            <input
+                                id="contact-phone"
+                                name="phone"
+                                type="tel"
+                                placeholder="Enter your phone number"
+                                autocomplete="tel"
+                                maxlength="30"
+                            >
+                        </div>
+                        <div>
+                            <label for="contact-subject">
+                                Subject
+                            </label>
+                            <input
+                                id="contact-subject"
+                                name="subject"
+                                type="text"
+                                placeholder="Enter subject"
+                                maxlength="160"
+                                required
+                            >
+                        </div>
+                        <div>
+                            <label for="contact-message">
+                                Message
+                            </label>
+                            <textarea
+                                id="contact-message"
+                                name="message"
+                                rows="6"
+                                placeholder="Write your message"
+                                maxlength="3000"
+                                required
+                            ></textarea>
+                        </div>
+                        <button type="submit">
+                            Send Message
+                        </button>
+                        <p class="form-status" id="contact-status" role="status" aria-live="polite"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="office-location">
+        <div class="container">
+            <div class="section-heading">
+                <span>Find Us</span>
+                <h2>
+                    Visit Our Office
+                </h2>
+            </div>
+            <div class="location-wrapper">
+                <div class="location-content">
+                    <h3>
+                        Restoration & Development Initiative for Youth
+                    </h3>
+                    <p>
+                        Our office is located along Sir Samuel Lewis Road,
+                        Aberdeen, Freetown, Sierra Leone.
+                    </p>
+                    <p>
+                        Visitors, development partners, volunteers,
+                        and stakeholders are welcome during official
+                        working hours.
+                    </p>
+                </div>
+                <div class="map-container">
+                    <iframe
+                        title="Map showing the RDIY office area on Sir Samuel Lewis Road, Aberdeen, Freetown"
+                        src="https://maps.google.com/maps?q=Sir%20Samuel%20Lewis%20Road%20Aberdeen%20Freetown%20Sierra%20Leone&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=&amp;output=embed"
+                        width="100%"
+                        height="500"
+                        style="border:0;"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        allowfullscreen="">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="contact-faq">
+        <div class="container">
+            <div class="section-heading">
+                <span>Frequently Asked Questions</span>
+                <h2>
+                    Quick Answers
+                </h2>
+            </div>
+            <div class="faq-item">
+                <h3>
+                    How can I become a volunteer?
+                </h3>
+                <p>
+                    Contact us through the form above and our team
+                    will provide available volunteer opportunities.
+                </p>
+            </div>
+            <div class="faq-item">
+                <h3>
+                    Can organizations partner with RDIY?
+                </h3>
+                <p>
+                    Yes. We welcome partnerships with NGOs,
+                    government institutions, donors,
+                    and private sector organizations.
+                </p>
+            </div>
+            <div class="faq-item">
+                <h3>
+                    How can I support your programs?
+                </h3>
+                <p>
+                    You can support through donations,
+                    sponsorships, volunteering,
+                    advocacy, and strategic partnerships.
+                </p>
+            </div>
+        </div>
+    </section>
+    </main>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-box">
+                <h3>Restoration & Development Initiative for Youth</h3>
+                <p>
+                    Empowering Youths.
+                    Restoring Hope.
+                    Building Sustainable Futures.
+                </p>
+            </div>
+            <div class="footer-box">
+                <h4>Quick Links</h4>
+                <ul>      
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="program.html">Programs</a></li>
+                    <li><a href="project.html">Projects</a></li>
+                    <li><a href="donate.html">Donate</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="privacy.html">Privacy</a></li>
+                </ul>
+            </div>
+            <div class="footer-box">
+                <h4>Programs</h4>
+                <ul>
+                    <li><a href="program.html#one">Skills Development</a></li>
+                    <li><a href="program.html#three">Agribusiness</a></li>
+                    <li><a href="program.html#two">Rehabilitation</a></li>
+                    <li><a href="program.html#four">Entrepreneurship</a></li>
+                    <li><a href="program.html#five">community-outreach</a></li>
+                </ul>
+            </div>
+            <div class="footer-box">
+                <h4>Contact</h4>
+                <p>Email Address: <a href="mailto:info.rdiy@gmail.com">info.rdiy@gmail.com</a></p>
+                <p>Phone Number: <a href="tel:+23272246411">+232 72 246 411</a></p>
+                <p>Office Address: Sir Samuel Lewis Road, Aberdeen, Freetown, Sierra Leone</p>
+            </div>
+        </div>
+        <div class="footer-copy">
+            <div class="copy">
+                &copy; <span data-current-year>2026</span> Restoration &amp; Development Initiative for Youth. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

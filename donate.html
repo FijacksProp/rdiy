@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Support RDIY's youth development, rehabilitation, entrepreneurship, and food security programs in Sierra Leone.">
+    <title>Donate - Restoration & Development Initiative for Youth</title>
+    <link rel="icon" href="img/rdiy-logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="header-container">
+        <div class="logo">
+            <a href="index.html" aria-label="RDIY home">
+                <img src="img/RDIY LOGO.png" alt="RDIY logo" width="1254" height="1254">
+            </a>
+        </div>
+        <nav class="nav" id="nav" aria-label="Primary navigation">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="program.html">Programs</a></li>
+                <li><a href="project.html">Projects</a></li>
+                <li><a href="donate.html">Donate</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="btn">
+            <a href="donate.html#donation-form">Donate Now &nbsp;<i class="fas fa-donate"></i></a>
+        </div>
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-controls="nav" aria-expanded="false" aria-label="Open navigation menu">☰</button>
+    </header>
+    <main id="main-content">
+    <section id="donate-hero">
+        <div class="container">
+            <h1>
+                Empower Youths. Restore Hope. Create Lasting Change.
+            </h1>
+            <p>
+                Your contribution helps vulnerable youths gain access to
+                education, vocational training, entrepreneurship opportunities,
+                rehabilitation services, and sustainable livelihood programs.
+            </p>
+        </div>
+    </section>
+    <section class="why-donate">
+        <div class="container">
+            <div class="section-heading">
+                <span>Why Donate</span>
+                <h2>
+                    Your Support Creates Opportunities
+                </h2>
+            </div>
+            <p>
+                Across Sierra Leone, many young people face unemployment,
+                poverty, limited access to education, drug abuse, food insecurity,
+                and social exclusion.
+            </p>
+            <p>
+                Through your support, RDIY can continue providing skills training,
+                rehabilitation programs, entrepreneurship support, agricultural
+                initiatives, and community development projects that transform lives.
+            </p>
+        </div>
+    </section>
+    <section class="donation-impact">
+        <div class="container">
+            <div class="section-heading">
+                <h2>
+                    How Donations Make A Difference
+                </h2>
+            </div>
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <h3>
+                        Skills Development
+                    </h3>
+                    <p>
+                        Support vocational and technical training programs.
+                    </p>
+                </div>
+                <div class="impact-card">
+                    <h3>
+                        Rehabilitation Support
+                    </h3>
+                    <p>
+                        Help provide counseling and recovery services.
+                    </p>
+                </div>
+                <div class="impact-card">
+                    <h3>
+                        Youth Entrepreneurship
+                    </h3>
+                    <p>
+                        Assist young entrepreneurs with mentorship and opportunities.
+                    </p>
+                </div>
+                <div class="impact-card">
+                    <h3>
+                        Agriculture & Food Security
+                    </h3>
+                    <p>
+                        Improve food production and agricultural livelihoods.
+                    </p>
+                </div>
+                <div class="impact-card">
+                    <h3>
+                        Community Development
+                    </h3>
+                    <p>
+                        Support projects that strengthen communities.
+                    </p>
+                </div>
+                <div class="impact-card">
+                    <h3>
+                        Youth Empowerment
+                    </h3>
+                    <p>
+                        Create opportunities for vulnerable young people.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="donation-options">
+        <div class="container">
+            <div class="section-heading">
+                <span>Donation Options</span>
+                <h2>
+                    Choose How You Want To Give
+                </h2>
+            </div>
+            <div class="donation-cards">
+                <div class="donation-card">
+                    <h3>
+                        One-Time Donation
+                    </h3>
+                    <p>
+                        Make a single contribution to support our programs.
+                    </p>
+                </div>
+                <div class="donation-card">
+                    <h3>
+                        Monthly Giving
+                    </h3>
+                    <p>
+                        Become a recurring supporter and create long-term impact.
+                    </p>
+                </div>
+                <div class="donation-card">
+                    <h3>
+                        Corporate Sponsorship
+                    </h3>
+                    <p>
+                        Partner with us to expand youth development initiatives.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="donation-form" id="donation-form">
+        <div class="container">
+            <div class="section-heading">
+                <span>Donation Enquiry</span>
+                <h2>
+                    Tell Us How You Would Like To Support
+                </h2>
+            </div>
+            <p class="form-notice" id="donation-notice">
+                This creates a donation reference and records your enquiry. It does not take payment. Never enter a card number, PIN, CVV, mobile-money secret, or one-time password here. See our <a href="privacy.html">privacy notice</a>.
+            </p>
+            <form action="/api/donation-enquiries" method="post" data-api-form="donation" aria-describedby="donation-notice donation-status">
+                <div class="form-trap" aria-hidden="true">
+                    <label for="donation-website">Website</label>
+                    <input id="donation-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                </div>
+                <div>
+                    <label for="donor-name">
+                        Full Name
+                    </label>
+                    <input
+                        id="donor-name"
+                        name="fullName"
+                        type="text"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        maxlength="120"
+                        required
+                    >
+                </div>
+                <div>
+                    <label for="donor-email">
+                        Email Address
+                    </label>
+                    <input
+                        id="donor-email"
+                        name="email"
+                        type="email"
+                        placeholder="Enter your email address"
+                        autocomplete="email"
+                        maxlength="254"
+                        required
+                    >
+                </div>
+                <div>
+                    <label for="donor-phone">
+                        Phone Number
+                    </label>
+                    <input
+                        id="donor-phone"
+                        name="phone"
+                        type="tel"
+                        placeholder="Enter phone number"
+                        autocomplete="tel"
+                        maxlength="30"
+                    >
+                </div>
+                <div>
+                    <label for="donation-amount">
+                        Intended Donation Amount (SLE)
+                    </label>
+                    <input
+                        id="donation-amount"
+                        name="amount"
+                        type="number"
+                        placeholder="Enter donation amount"
+                        min="1"
+                        step="0.01"
+                        inputmode="decimal"
+                    >
+                </div>
+                <div>
+                    <label for="donation-purpose">
+                        Donation Purpose
+                    </label>
+                    <select id="donation-purpose" name="purpose">
+                        <option value="general">
+                            General Support
+                        </option>
+                        <option value="skills-development">
+                            Skills Development
+                        </option>
+                        <option value="rehabilitation">
+                            Rehabilitation Programs
+                        </option>
+                        <option value="entrepreneurship">
+                            Youth Entrepreneurship
+                        </option>
+                        <option value="agriculture">
+                            Agriculture & Food Security
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <label for="donation-message">
+                        Additional Message
+                    </label>
+                    <textarea
+                        id="donation-message"
+                        name="message"
+                        rows="5"
+                        placeholder="Leave a message"
+                        maxlength="2000"
+                    ></textarea>
+                </div>
+                <button type="submit">
+                    Create Donation Reference
+                </button>
+                <p class="form-status" id="donation-status" role="status" aria-live="polite"></p>
+            </form>
+        </div>
+    </section>
+    <section class="donation-confirmation" id="donation-confirmation">
+        <div class="container">
+            <div class="section-heading">
+                <span>Report A Transfer</span>
+                <h2>Submitted A Manual Donation?</h2>
+            </div>
+            <p class="form-notice" id="confirmation-notice">
+                Report the transaction reference supplied by your bank or mobile-money provider. A report is not proof of payment; RDIY will verify it against the receiving account before confirming your donation.
+            </p>
+            <form action="/api/donation-confirmations" method="post" data-api-form="donation-confirmation" aria-describedby="confirmation-notice confirmation-status">
+                <div class="form-trap" aria-hidden="true">
+                    <label for="confirmation-website">Website</label>
+                    <input id="confirmation-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                </div>
+                <div>
+                    <label for="confirmation-donation-reference">RDIY Donation Reference</label>
+                    <input id="confirmation-donation-reference" name="donationReference" type="text" placeholder="Example: RDIY-2026-AB12CD" maxlength="30" autocomplete="off" required>
+                </div>
+                <div>
+                    <label for="confirmation-provider">Payment Method</label>
+                    <select id="confirmation-provider" name="provider" required>
+                        <option value="">Select a method</option>
+                        <option value="orange-money">Orange Money</option>
+                        <option value="afrimoney">Afrimoney</option>
+                        <option value="bank-transfer">Bank transfer</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="confirmation-transaction-reference">Provider Transaction Reference</label>
+                    <input id="confirmation-transaction-reference" name="transactionReference" type="text" placeholder="Enter the provider reference" maxlength="120" autocomplete="off" required>
+                </div>
+                <div>
+                    <label for="confirmation-sender-name">Sender Name</label>
+                    <input id="confirmation-sender-name" name="senderName" type="text" placeholder="Name used for the transfer" maxlength="120" autocomplete="name" required>
+                </div>
+                <button type="submit">Submit Transfer Report</button>
+                <p class="form-status" id="confirmation-status" role="status" aria-live="polite"></p>
+            </form>
+        </div>
+    </section>
+    <section class="other-support">
+        <div class="container">
+            <div class="section-heading">
+                <span>Other Ways To Help</span>
+                <h2>
+                    Get Involved Beyond Donations
+                </h2>
+            </div>
+            <div class="support-grid">
+                <div>
+                    <h3>
+                        Volunteer
+                    </h3>
+                    <p>
+                        Share your skills and expertise with our programs.
+                    </p>
+                </div>
+                <div>
+                    <h3>
+                        Become A Partner
+                    </h3>
+                    <p>
+                        Collaborate with us to create sustainable impact.
+                    </p>
+                </div>
+                <div>
+                    <h3>
+                        Sponsor A Project
+                    </h3>
+                    <p>
+                        Help fund a specific youth development initiative.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="donation-faq">
+        <div class="container">
+            <div class="section-heading">
+                <span>Frequently Asked Questions</span>
+
+                <h2>
+                    Common Questions About Giving
+                </h2>
+            </div>
+            <div class="faq-item">
+                <h3>
+                    How will my donation be used?
+                </h3>
+                <p>
+                    Donations support youth empowerment, vocational training,
+                    rehabilitation services, entrepreneurship development,
+                    agriculture projects, and community initiatives.
+                </p>
+            </div>
+            <div class="faq-item">
+                <h3>
+                    Can I support a specific program?
+                </h3>
+                <p>
+                    Yes, donors can choose specific program areas during the
+                    donation process.
+                </p>
+            </div>
+            <div class="faq-item">
+                <h3>
+                    Can organizations partner with RDIY?
+                </h3>
+                <p>
+                    Yes, we welcome partnerships with NGOs, government agencies,
+                    businesses, and development organizations.
+                </p>
+            </div>
+        </div>
+    </section>
+    </main>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-box">
+                <h3>Restoration & Development Initiative for Youth</h3>
+                <p>
+                    Empowering Youths.
+                    Restoring Hope.
+                    Building Sustainable Futures.
+                </p>
+            </div>
+            <div class="footer-box">
+                <h4>Quick Links</h4>
+                <ul>      
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="program.html">Programs</a></li>
+                    <li><a href="project.html">Projects</a></li>
+                    <li><a href="donate.html">Donate</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="privacy.html">Privacy</a></li>
+                </ul>
+            </div>
+            <div class="footer-box">
+                <h4>Programs</h4>
+                <ul>
+                    <li><a href="program.html#one">Skills Development</a></li>
+                    <li><a href="program.html#three">Agribusiness</a></li>
+                    <li><a href="program.html#two">Rehabilitation</a></li>
+                    <li><a href="program.html#four">Entrepreneurship</a></li>
+                    <li><a href="program.html#five">community-outreach</a></li>
+                </ul>
+            </div>
+            <div class="footer-box">
+                <h4>Contact</h4>
+                <p>Email Address: <a href="mailto:info.rdiy@gmail.com">info.rdiy@gmail.com</a></p>
+                <p>Phone Number: <a href="tel:+23272246411">+232 72 246 411</a></p>
+                <p>Office Address: Sir Samuel Lewis Road, Aberdeen, Freetown, Sierra Leone</p>
+            </div>
+        </div>
+        <div class="footer-copy">
+            <div class="copy">
+                &copy; <span data-current-year>2026</span> Restoration &amp; Development Initiative for Youth. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
