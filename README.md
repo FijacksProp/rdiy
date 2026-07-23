@@ -48,7 +48,7 @@ The Restoration & Development Initiative for Youth website is a Vercel-native mu
 | `DATABASE_URL` | Yes | Neon pooled PostgreSQL connection string |
 | `RATE_LIMIT_SALT` | Yes | Secret used to hash visitor IPs before rate-limit storage |
 | `RESEND_API_KEY` | No | Enables notification email delivery |
-| `CONTACT_TO_EMAIL` | No | Staff notification recipient; defaults to `info.rdiy@gmail.com` |
+| `CONTACT_TO_EMAIL` | No | Staff notification recipient; defaults to `rdiy.sl.org@gmail.com` |
 | `RESEND_FROM_EMAIL` | No | Verified sender; defaults to Resend's onboarding sender |
 | `ALLOWED_ORIGINS` | No | Extra comma-separated form origins |
 | `DONATION_INSTRUCTIONS` | No | Public transfer guidance returned with a donation reference |
