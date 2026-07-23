@@ -775,6 +775,10 @@ ul{
     font-size: 18px;
 }
 
+.footer-box > p + h4 {
+    margin-top: 22px;
+}
+
 .footer-box p {
     color: #cbd5e1;
     line-height: 1.8;
@@ -850,6 +854,18 @@ ul{
 .icons a:hover {
     background: #22c55e;
     transform: translateY(-3px);
+}
+
+.whatsapp-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 8px;
+}
+
+.whatsapp-link i {
+    color: #16a34a;
+    font-size: 1.15rem;
 }
 
 /* MOBILE */
