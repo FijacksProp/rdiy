@@ -2118,7 +2118,7 @@ p{
     background:linear-gradient(
         rgba(23, 34, 60, 0.78), rgba(23, 34, 60, 0.78)
     ),
-    url("img/helpus.jpg") center/cover;
+    url("img/contact.jpeg") center/cover;
     padding: 7%;
     text-align:center;
     color:#fff;
@@ -2690,7 +2690,7 @@ button:disabled {
 
 .policy-hero {
     padding: 150px 7% 80px;
-    background: linear-gradient(rgba(8, 59, 140, .9), rgba(15, 23, 42, .9)), url("img/helpus.jpg") center/cover;
+    background: linear-gradient(rgba(8, 59, 140, .9), rgba(15, 23, 42, .9)), url("img/policy.jpeg") center/cover;
     color: #fff;
     text-align: center;
 }
