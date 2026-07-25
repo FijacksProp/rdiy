@@ -9,6 +9,7 @@ import {
 describe("public form validation", () => {
   it("normalizes contact email and trims text", () => {
     const result = contactSchema.parse({
+      contactType: "general-inquiry",
       fullName: "  Example Person  ",
       email: " PERSON@EXAMPLE.COM ",
       phone: "",
@@ -20,6 +21,53 @@ describe("public form validation", () => {
     expect(result.fullName).toBe("Example Person");
     expect(result.email).toBe("person@example.com");
     expect(result.subject).toBe("Partnership");
+  });
+
+  it("requires a valid contact category", () => {
+    const base = {
+      fullName: "Example Person",
+      email: "person@example.com",
+      phone: "",
+      subject: "Hello",
+      message: "I would like more information.",
+      website: ""
+    };
+
+    expect(contactSchema.safeParse(base).success).toBe(false);
+    expect(contactSchema.safeParse({ ...base, contactType: "general-inquiry" }).success).toBe(true);
+  });
+
+  it("requires partnership context only for partnership enquiries", () => {
+    const base = {
+      contactType: "partnership",
+      fullName: "Example Person",
+      email: "person@example.com",
+      phone: "",
+      subject: "Partnership opportunity",
+      message: "We would like to discuss working together.",
+      website: ""
+    };
+
+    expect(contactSchema.safeParse(base).success).toBe(false);
+    expect(contactSchema.safeParse({
+      ...base,
+      organizationName: "Example Foundation",
+      partnershipFocus: "program-delivery"
+    }).success).toBe(true);
+  });
+
+  it("accepts categorized donation support enquiries", () => {
+    expect(contactSchema.safeParse({
+      contactType: "donation-support",
+      fullName: "Example Donor",
+      email: "donor@example.com",
+      phone: "",
+      donationTopic: "existing-donation",
+      donationReference: "RDIY-2026-A1B2C3",
+      subject: "Transfer question",
+      message: "Please help me check my transfer.",
+      website: ""
+    }).success).toBe(true);
   });
 
   it("rejects malformed newsletter addresses", () => {

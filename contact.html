@@ -114,6 +114,23 @@
                             <label for="contact-website">Website</label>
                             <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off">
                         </div>
+                        <div class="form-wide contact-type-field">
+                            <label for="contact-type">
+                                What would you like to contact us about?
+                            </label>
+                            <select id="contact-type" name="contactType" aria-describedby="contact-type-help" required>
+                                <option value="">Select a contact type</option>
+                                <option value="general-inquiry">General enquiry</option>
+                                <option value="partnership">Partnership</option>
+                                <option value="collaboration">Collaboration</option>
+                                <option value="donation-support">Donation support</option>
+                                <option value="volunteering">Volunteering</option>
+                                <option value="media-request">Media or speaking request</option>
+                            </select>
+                            <p class="contact-type-help" id="contact-type-help">
+                                Choose the closest option. The form will show any additional details we need.
+                            </p>
+                        </div>
                         <div>
                             <label for="contact-name">
                                 Full Name
@@ -155,6 +172,125 @@
                                 maxlength="30"
                             >
                         </div>
+                        <div data-contact-types="partnership collaboration media-request" hidden>
+                            <label for="contact-organization">
+                                Organization or Media Outlet
+                            </label>
+                            <input
+                                id="contact-organization"
+                                name="organizationName"
+                                type="text"
+                                placeholder="Enter the organization name"
+                                autocomplete="organization"
+                                maxlength="160"
+                                data-required-when-visible
+                                disabled
+                            >
+                        </div>
+                        <div data-contact-types="partnership collaboration" hidden>
+                            <label for="contact-role">
+                                Your Role
+                            </label>
+                            <input
+                                id="contact-role"
+                                name="organizationRole"
+                                type="text"
+                                placeholder="Your role in the organization"
+                                autocomplete="organization-title"
+                                maxlength="120"
+                                disabled
+                            >
+                        </div>
+                        <div data-contact-types="partnership" hidden>
+                            <label for="partnership-focus">
+                                Partnership Focus
+                            </label>
+                            <select id="partnership-focus" name="partnershipFocus" data-required-when-visible disabled>
+                                <option value="">Select a focus</option>
+                                <option value="funding">Funding</option>
+                                <option value="program-delivery">Programme delivery</option>
+                                <option value="corporate-sponsorship">Corporate sponsorship</option>
+                                <option value="technical-support">Technical support</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div data-contact-types="collaboration" hidden>
+                            <label for="collaboration-focus">
+                                Collaboration Area
+                            </label>
+                            <select id="collaboration-focus" name="collaborationFocus" data-required-when-visible disabled>
+                                <option value="">Select an area</option>
+                                <option value="community-outreach">Community outreach</option>
+                                <option value="training">Training</option>
+                                <option value="research">Research</option>
+                                <option value="advocacy">Advocacy</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div data-contact-types="donation-support" hidden>
+                            <label for="donation-topic">
+                                Donation Topic
+                            </label>
+                            <select id="donation-topic" name="donationTopic" data-required-when-visible disabled>
+                                <option value="">Select a topic</option>
+                                <option value="how-to-donate">How to donate</option>
+                                <option value="bank-transfer">Bank transfer instructions</option>
+                                <option value="existing-donation">Question about an existing donation</option>
+                                <option value="receipt">Donation acknowledgement</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div data-contact-types="donation-support" hidden>
+                            <label for="contact-donation-reference">
+                                Donation Reference <span class="field-optional">(if available)</span>
+                            </label>
+                            <input
+                                id="contact-donation-reference"
+                                name="donationReference"
+                                type="text"
+                                placeholder="Example: RDIY-2026-A1B2C3"
+                                maxlength="30"
+                                autocomplete="off"
+                                disabled
+                            >
+                        </div>
+                        <div data-contact-types="volunteering" hidden>
+                            <label for="volunteer-interest">
+                                Volunteering Interest
+                            </label>
+                            <select id="volunteer-interest" name="volunteerInterest" data-required-when-visible disabled>
+                                <option value="">Select an area</option>
+                                <option value="program-support">Programme support</option>
+                                <option value="community-outreach">Community outreach</option>
+                                <option value="professional-skills">Professional skills</option>
+                                <option value="fundraising">Fundraising</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div data-contact-types="volunteering" hidden>
+                            <label for="contact-availability">
+                                General Availability <span class="field-optional">(optional)</span>
+                            </label>
+                            <input
+                                id="contact-availability"
+                                name="availability"
+                                type="text"
+                                placeholder="Example: Weekends or weekday afternoons"
+                                maxlength="120"
+                                disabled
+                            >
+                        </div>
+                        <div data-contact-types="media-request" hidden>
+                            <label for="contact-media-deadline">
+                                Requested Response Date <span class="field-optional">(optional)</span>
+                            </label>
+                            <input
+                                id="contact-media-deadline"
+                                name="mediaDeadline"
+                                type="date"
+                                disabled
+                            >
+                        </div>
                         <div>
                             <label for="contact-subject">
                                 Subject
@@ -163,8 +299,8 @@
                                 id="contact-subject"
                                 name="subject"
                                 type="text"
-                                placeholder="Enter subject"
-                                maxlength="160"
+                                placeholder="Briefly describe your request"
+                                maxlength="120"
                                 required
                             >
                         </div>
@@ -177,7 +313,7 @@
                                 name="message"
                                 rows="6"
                                 placeholder="Write your message"
-                                maxlength="3000"
+                                maxlength="2400"
                                 required
                             ></textarea>
                         </div>

@@ -2229,6 +2229,10 @@ p{
     gap:20px;
 }
 
+.contact-form .form-wide{
+    grid-column:1 / -1;
+}
+
 .contact-form form div:last-of-type{
     grid-column:span 2;
 }
@@ -2241,6 +2245,7 @@ p{
 }
 
 .contact-form input,
+.contact-form select,
 .contact-form textarea{
     width:100%;
     padding:15px;
@@ -2251,8 +2256,29 @@ p{
 }
 
 .contact-form input:focus,
+.contact-form select:focus,
 .contact-form textarea:focus{
     border-color:#16a34a;
+}
+
+.contact-type-field{
+    padding:18px;
+    border:1px solid #dbeafe;
+    border-radius:12px;
+    background:#f8fafc;
+}
+
+.contact-type-help{
+    margin-top:8px;
+    color:#64748b;
+    font-size:.88rem;
+    line-height:1.5;
+}
+
+.field-optional{
+    color:#64748b;
+    font-size:.82em;
+    font-weight:500;
 }
 
 .contact-form button{

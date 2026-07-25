@@ -64,6 +64,52 @@ document.querySelectorAll<HTMLElement>("[data-current-year]").forEach((element) 
   element.textContent = String(new Date().getFullYear());
 });
 
+function setupAdaptiveContactForm(): void {
+  const form = document.querySelector<HTMLFormElement>('[data-api-form="contact"]');
+  const typeSelect = document.getElementById("contact-type");
+  const help = document.getElementById("contact-type-help");
+
+  if (!form || !(typeSelect instanceof HTMLSelectElement)) return;
+
+  const conditionalFields = Array.from(form.querySelectorAll<HTMLElement>("[data-contact-types]"));
+  const helpText: Record<string, string> = {
+    "": "Choose the closest option. The form will show any additional details we need.",
+    "general-inquiry": "For questions that do not fit another category.",
+    partnership: "Tell us who you represent and the kind of partnership you would like to explore.",
+    collaboration: "Share the organization and programme area you would like to work on with RDIY.",
+    "donation-support": "Ask about making a donation or provide a reference for an existing donation.",
+    volunteering: "Tell us how you would like to contribute and when you are generally available.",
+    "media-request": "Provide the media outlet or organization and any relevant response date."
+  };
+
+  const updateFields = () => {
+    const selectedType = typeSelect.value;
+
+    conditionalFields.forEach((field) => {
+      const visibleFor = field.dataset.contactTypes?.split(/\s+/) ?? [];
+      const isVisible = visibleFor.includes(selectedType);
+      field.hidden = !isVisible;
+
+      field.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("input, select, textarea")
+        .forEach((control) => {
+          control.disabled = !isVisible;
+          control.required = isVisible && control.hasAttribute("data-required-when-visible");
+        });
+    });
+
+    if (help) {
+      help.textContent = helpText[selectedType]
+        ?? "Choose the closest option. The form will show any additional details we need.";
+    }
+  };
+
+  typeSelect.addEventListener("change", updateFields);
+  form.addEventListener("reset", () => window.setTimeout(updateFields, 0));
+  updateFields();
+}
+
+setupAdaptiveContactForm();
+
 function getStatusElement(form: HTMLFormElement, formType: FormType): HTMLElement | null {
   return form.querySelector<HTMLElement>(".form-status")
     ?? document.getElementById(`${formType}-status`);

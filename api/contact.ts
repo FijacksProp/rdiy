@@ -5,6 +5,34 @@ import { consumeRateLimit, isHoneypotTriggered } from "../server/security.js";
 import { contactSchema, validationMessage } from "../server/validation.js";
 import type { VercelRequest, VercelResponse } from "../server/vercel.js";
 
+const contactTypeLabels = {
+  "general-inquiry": "General enquiry",
+  partnership: "Partnership",
+  collaboration: "Collaboration",
+  "donation-support": "Donation support",
+  volunteering: "Volunteering",
+  "media-request": "Media or speaking request"
+} as const;
+
+const detailLabels: Record<string, string> = {
+  funding: "Funding",
+  "program-delivery": "Programme delivery",
+  "corporate-sponsorship": "Corporate sponsorship",
+  "technical-support": "Technical support",
+  "community-outreach": "Community outreach",
+  training: "Training",
+  research: "Research",
+  advocacy: "Advocacy",
+  "how-to-donate": "How to donate",
+  "bank-transfer": "Bank transfer instructions",
+  "existing-donation": "Existing donation",
+  receipt: "Donation acknowledgement",
+  "program-support": "Programme support",
+  "professional-skills": "Professional skills",
+  fundraising: "Fundraising",
+  other: "Other"
+};
+
 export default async function handler(request: VercelRequest, response: VercelResponse): Promise<void> {
   if (!preparePost(request, response)) return;
 
@@ -26,14 +54,30 @@ export default async function handler(request: VercelRequest, response: VercelRe
     }
 
     const sql = db();
+    const typeLabel = contactTypeLabels[parsed.data.contactType];
+    const storedSubject = `${typeLabel}: ${parsed.data.subject}`;
+    const details = [
+      `Contact type: ${typeLabel}`,
+      parsed.data.organizationName ? `Organization: ${parsed.data.organizationName}` : null,
+      parsed.data.organizationRole ? `Role: ${parsed.data.organizationRole}` : null,
+      parsed.data.partnershipFocus ? `Partnership focus: ${detailLabels[parsed.data.partnershipFocus]}` : null,
+      parsed.data.collaborationFocus ? `Collaboration area: ${detailLabels[parsed.data.collaborationFocus]}` : null,
+      parsed.data.donationTopic ? `Donation topic: ${detailLabels[parsed.data.donationTopic]}` : null,
+      parsed.data.donationReference ? `Donation reference: ${parsed.data.donationReference.toUpperCase()}` : null,
+      parsed.data.volunteerInterest ? `Volunteering interest: ${detailLabels[parsed.data.volunteerInterest]}` : null,
+      parsed.data.availability ? `Availability: ${parsed.data.availability}` : null,
+      parsed.data.mediaDeadline ? `Requested response date: ${parsed.data.mediaDeadline}` : null
+    ].filter((detail): detail is string => Boolean(detail));
+    const storedMessage = [...details, "", parsed.data.message].join("\n");
+
     const rows = await sql`
       INSERT INTO contact_messages (full_name, email, phone, subject, message)
-      VALUES (${parsed.data.fullName}, ${parsed.data.email}, ${parsed.data.phone}, ${parsed.data.subject}, ${parsed.data.message})
+      VALUES (${parsed.data.fullName}, ${parsed.data.email}, ${parsed.data.phone}, ${storedSubject}, ${storedMessage})
       RETURNING id
     `;
     const messageId = String(rows[0]?.id);
     const emailStatus = await sendStaffEmail({
-      subject: `RDIY website enquiry: ${parsed.data.subject}`,
+      subject: `RDIY website enquiry: ${storedSubject}`,
       replyTo: parsed.data.email,
       text: [
         "A new contact enquiry was submitted.",
@@ -41,9 +85,9 @@ export default async function handler(request: VercelRequest, response: VercelRe
         `Name: ${parsed.data.fullName}`,
         `Email: ${parsed.data.email}`,
         `Phone: ${parsed.data.phone || "Not provided"}`,
-        `Subject: ${parsed.data.subject}`,
+        `Subject: ${storedSubject}`,
         "",
-        parsed.data.message,
+        storedMessage,
         "",
         `Record ID: ${messageId}`
       ].join("\n")
