@@ -2008,6 +2008,166 @@ p{
     background:#15803d;
 }
 
+.bank-transfer-panel[hidden]{
+    display:none;
+}
+
+.bank-transfer-panel{
+    max-width:800px;
+    margin:32px auto 0;
+    padding:32px;
+    border:1px solid #bbf7d0;
+    border-radius:20px;
+    background:#fff;
+    box-shadow:0 10px 30px rgba(0,0,0,.09);
+    scroll-margin-top:110px;
+}
+
+.bank-transfer-panel:focus{
+    outline:3px solid rgba(19,122,58,.28);
+    outline-offset:4px;
+}
+
+.bank-transfer-heading{
+    display:flex;
+    align-items:flex-start;
+    gap:18px;
+    margin-bottom:26px;
+}
+
+.bank-transfer-heading h3{
+    margin-bottom:4px;
+    color:var(--dark);
+    font-size:clamp(1.3rem,3vw,1.75rem);
+    line-height:1.3;
+}
+
+.bank-transfer-heading p{
+    line-height:1.6;
+}
+
+.transfer-step{
+    flex:0 0 auto;
+    padding:5px 12px;
+    border-radius:999px;
+    background:#dcfce7;
+    color:#0f6530;
+    font-size:.82rem;
+    font-weight:800;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.bank-details-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+}
+
+.bank-details-grid > div{
+    min-width:0;
+    padding:18px;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    background:#f8fafc;
+}
+
+.bank-details-grid .donation-reference-detail{
+    grid-column:1 / -1;
+    border-color:#bbf7d0;
+    background:#f0fdf4;
+}
+
+.bank-details-grid dt{
+    margin-bottom:3px;
+    color:#64748b;
+    font-size:.8rem;
+    font-weight:800;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+}
+
+.bank-details-grid dd{
+    overflow-wrap:anywhere;
+    color:var(--dark);
+    font-size:1.05rem;
+    font-weight:800;
+    line-height:1.45;
+}
+
+.donation-form .copy-detail{
+    width:auto;
+    margin-top:10px;
+    padding:5px 0;
+    border-radius:0;
+    background:transparent;
+    color:var(--primary);
+    font-size:.86rem;
+    text-decoration:underline;
+    text-underline-offset:3px;
+}
+
+.donation-form .copy-detail:hover{
+    background:transparent;
+    color:var(--secondary);
+}
+
+.bank-transfer-actions{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-top:22px;
+}
+
+.donation-form .bank-transfer-actions .copy-all-details,
+.bank-transfer-actions a{
+    display:inline-flex;
+    width:auto;
+    min-height:48px;
+    align-items:center;
+    justify-content:center;
+    padding:11px 18px;
+    border-radius:10px;
+    font-size:.94rem;
+    font-weight:800;
+    text-align:center;
+}
+
+.bank-transfer-actions a{
+    border:2px solid var(--secondary);
+    color:var(--secondary);
+}
+
+.bank-transfer-actions a:hover{
+    background:#f0fdf4;
+}
+
+.copy-status{
+    min-height:1.6em;
+    margin-top:10px;
+    color:#0f6530;
+    font-size:.9rem;
+    font-weight:700;
+}
+
+.copy-status.is-error{
+    color:#b42318;
+}
+
+.transfer-safety-note{
+    margin-top:18px;
+    padding:14px 16px;
+    border-radius:10px;
+    background:#fff8e8;
+    color:#5c430e;
+    font-size:.9rem;
+    line-height:1.55;
+}
+
+.transfer-safety-note i{
+    margin-right:6px;
+}
+
 /* ==================================
    OTHER SUPPORT
 ================================== */
@@ -2629,6 +2789,30 @@ button:disabled {
     font-weight: 700;
 }
 
+.confirmation-method{
+    padding:14px 16px;
+    border:1px solid #dbeafe;
+    border-radius:10px;
+    background:#f8fafc;
+}
+
+.confirmation-method span,
+.confirmation-method strong{
+    display:block;
+}
+
+.confirmation-method span{
+    margin-bottom:2px;
+    color:#64748b;
+    font-size:.82rem;
+    font-weight:700;
+    text-transform:uppercase;
+}
+
+.confirmation-method strong{
+    color:var(--dark);
+}
+
 .contact-form .form-status {
     grid-column: 1 / -1;
     margin-top: 0;
@@ -2708,6 +2892,29 @@ button:disabled {
 
     .donation-confirmation form {
         padding: 30px 20px;
+    }
+
+    .bank-transfer-panel{
+        padding:24px 20px;
+    }
+
+    .bank-transfer-heading,
+    .bank-transfer-actions{
+        align-items:stretch;
+        flex-direction:column;
+    }
+
+    .bank-details-grid{
+        grid-template-columns:1fr;
+    }
+
+    .bank-details-grid .donation-reference-detail{
+        grid-column:auto;
+    }
+
+    .donation-form .bank-transfer-actions .copy-all-details,
+    .bank-transfer-actions a{
+        width:100%;
     }
 }
 

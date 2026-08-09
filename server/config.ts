@@ -10,7 +10,6 @@ export const config = {
   resendApiKey: () => process.env.RESEND_API_KEY?.trim() || null,
   contactToEmail: () => process.env.CONTACT_TO_EMAIL?.trim() || "rdiy.sl.org@gmail.com",
   resendFromEmail: () => process.env.RESEND_FROM_EMAIL?.trim() || "RDIY Website <onboarding@resend.dev>",
-  donationInstructions: () => process.env.DONATION_INSTRUCTIONS?.trim() || null,
   allowedOrigins: () => (process.env.ALLOWED_ORIGINS || "")
     .split(",")
     .map((origin) => origin.trim())

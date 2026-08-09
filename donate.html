@@ -163,13 +163,13 @@
     <section class="donation-form" id="donation-form">
         <div class="container">
             <div class="section-heading">
-                <span>Donation Enquiry</span>
+                <span>Step 1</span>
                 <h2>
-                    Tell Us How You Would Like To Support
+                    Create Your Donation Reference
                 </h2>
             </div>
             <p class="form-notice" id="donation-notice">
-                This creates a donation reference and records your enquiry. It does not take payment. Never enter a card number, PIN, CVV, mobile-money secret, or one-time password here. See our <a href="privacy.html">privacy notice</a>.
+                Enter the amount you intend to transfer. We will create a unique reference and show RDIY's verified Ecobank details. This form does not take payment. Never enter a card number, PIN, CVV, bank password, or one-time password here. See our <a href="privacy.html">privacy notice</a>.
             </p>
             <form action="/api/donation-enquiries" method="post" data-api-form="donation" aria-describedby="donation-notice donation-status">
                 <div class="form-trap" aria-hidden="true">
@@ -229,6 +229,7 @@
                         min="1"
                         step="0.01"
                         inputmode="decimal"
+                        required
                     >
                 </div>
                 <div>
@@ -266,20 +267,62 @@
                     ></textarea>
                 </div>
                 <button type="submit">
-                    Create Donation Reference
+                    Generate Bank Transfer Details
                 </button>
                 <p class="form-status" id="donation-status" role="status" aria-live="polite"></p>
             </form>
+            <div class="bank-transfer-panel" id="bank-transfer-panel" tabindex="-1" aria-labelledby="bank-transfer-heading" hidden>
+                <div class="bank-transfer-heading">
+                    <span class="transfer-step">Step 2</span>
+                    <div>
+                        <h3 id="bank-transfer-heading">Complete the transfer in your banking app</h3>
+                        <p>Use the details exactly as shown and place your RDIY reference in the transfer narration or description.</p>
+                    </div>
+                </div>
+                <dl class="bank-details-grid">
+                    <div>
+                        <dt>Donation amount</dt>
+                        <dd><span data-bank-transfer-field="amount">—</span> <span data-bank-transfer-field="currency">—</span></dd>
+                        <button type="button" class="copy-detail" data-copy-transfer-field="amount">Copy amount</button>
+                    </div>
+                    <div>
+                        <dt>Bank</dt>
+                        <dd data-bank-transfer-field="bankName">—</dd>
+                        <button type="button" class="copy-detail" data-copy-transfer-field="bankName">Copy bank</button>
+                    </div>
+                    <div>
+                        <dt>Account name</dt>
+                        <dd data-bank-transfer-field="accountName">—</dd>
+                        <button type="button" class="copy-detail" data-copy-transfer-field="accountName">Copy name</button>
+                    </div>
+                    <div>
+                        <dt>Account number</dt>
+                        <dd data-bank-transfer-field="accountNumber">—</dd>
+                        <button type="button" class="copy-detail" data-copy-transfer-field="accountNumber">Copy number</button>
+                    </div>
+                    <div class="donation-reference-detail">
+                        <dt>Transfer narration / RDIY reference</dt>
+                        <dd data-bank-transfer-field="reference">—</dd>
+                        <button type="button" class="copy-detail" data-copy-transfer-field="reference">Copy reference</button>
+                    </div>
+                </dl>
+                <div class="bank-transfer-actions">
+                    <button type="button" class="copy-all-details" data-copy-bank-transfer>Copy all transfer details</button>
+                    <a href="#donation-confirmation">I have completed the transfer</a>
+                </div>
+                <p class="copy-status" id="bank-copy-status" role="status" aria-live="polite"></p>
+                <p class="transfer-safety-note"><i class="fas fa-shield-halved" aria-hidden="true"></i> Confirm the account name is “Restoration and development initiative for youth” before authorising the transfer. Your donation remains pending until RDIY verifies it.</p>
+            </div>
         </div>
     </section>
     <section class="donation-confirmation" id="donation-confirmation">
         <div class="container">
             <div class="section-heading">
-                <span>Report A Transfer</span>
-                <h2>Submitted A Manual Donation?</h2>
+                <span>Step 3</span>
+                <h2>Report Your Bank Transfer</h2>
             </div>
             <p class="form-notice" id="confirmation-notice">
-                Report the transaction reference supplied by your bank or mobile-money provider. A report is not proof of payment; RDIY will verify it against the receiving account before confirming your donation.
+                After paying through your bank app or online banking, submit the transaction reference supplied by your bank. A report is not proof of payment; RDIY will verify it against the Ecobank account before confirming your donation.
             </p>
             <form action="/api/donation-confirmations" method="post" data-api-form="donation-confirmation" aria-describedby="confirmation-notice confirmation-status">
                 <div class="form-trap" aria-hidden="true">
@@ -290,19 +333,14 @@
                     <label for="confirmation-donation-reference">RDIY Donation Reference</label>
                     <input id="confirmation-donation-reference" name="donationReference" type="text" placeholder="Example: RDIY-2026-AB12CD" maxlength="30" autocomplete="off" required>
                 </div>
-                <div>
-                    <label for="confirmation-provider">Payment Method</label>
-                    <select id="confirmation-provider" name="provider" required>
-                        <option value="">Select a method</option>
-                        <option value="orange-money">Orange Money</option>
-                        <option value="afrimoney">Afrimoney</option>
-                        <option value="bank-transfer">Bank transfer</option>
-                        <option value="other">Other</option>
-                    </select>
+                <div class="confirmation-method">
+                    <span>Payment method</span>
+                    <strong>Ecobank bank transfer</strong>
+                    <input name="provider" type="hidden" value="bank-transfer">
                 </div>
                 <div>
-                    <label for="confirmation-transaction-reference">Provider Transaction Reference</label>
-                    <input id="confirmation-transaction-reference" name="transactionReference" type="text" placeholder="Enter the provider reference" maxlength="120" autocomplete="off" required>
+                    <label for="confirmation-transaction-reference">Bank Transaction Reference</label>
+                    <input id="confirmation-transaction-reference" name="transactionReference" type="text" placeholder="Enter the reference shown by your bank" maxlength="120" autocomplete="off" required>
                 </div>
                 <div>
                     <label for="confirmation-sender-name">Sender Name</label>

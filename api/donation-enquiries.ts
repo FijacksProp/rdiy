@@ -1,6 +1,6 @@
-import { config } from "../server/config.js";
 import { db } from "../server/db.js";
-import { sendStaffEmail } from "../server/email.js";
+import { bankTransferDetails, formatDonationAmount } from "../server/donations.js";
+import { combineEmailStatuses, sendDonorEmail, sendStaffEmail } from "../server/email.js";
 import { preparePost, readBody, sendJson } from "../server/http.js";
 import { createDonationReference } from "../server/references.js";
 import { consumeRateLimit, isHoneypotTriggered } from "../server/security.js";
@@ -40,23 +40,47 @@ export default async function handler(request: VercelRequest, response: VercelRe
       RETURNING id
     `;
     const enquiryId = String(rows[0]?.id);
-    const emailStatus = await sendStaffEmail({
-      subject: `New RDIY donation enquiry: ${reference}`,
-      replyTo: parsed.data.email,
-      text: [
-        "A new donation enquiry was submitted.",
-        "",
-        `Reference: ${reference}`,
-        `Name: ${parsed.data.fullName}`,
-        `Email: ${parsed.data.email}`,
-        `Phone: ${parsed.data.phone || "Not provided"}`,
-        `Intended amount: ${parsed.data.amount === null ? "Not provided" : `${parsed.data.amount.toFixed(2)} SLE`}`,
-        `Purpose: ${parsed.data.purpose}`,
-        `Message: ${parsed.data.message || "Not provided"}`,
-        "",
-        `Record ID: ${enquiryId}`
-      ].join("\n")
-    });
+    const formattedAmount = formatDonationAmount(parsed.data.amount);
+    const [staffEmailStatus, donorEmailStatus] = await Promise.all([
+      sendStaffEmail({
+        subject: `New RDIY donation enquiry: ${reference}`,
+        replyTo: parsed.data.email,
+        text: [
+          "A new bank-transfer donation was started.",
+          "",
+          `Reference: ${reference}`,
+          `Name: ${parsed.data.fullName}`,
+          `Email: ${parsed.data.email}`,
+          `Phone: ${parsed.data.phone || "Not provided"}`,
+          `Intended amount: ${formattedAmount}`,
+          `Purpose: ${parsed.data.purpose}`,
+          `Message: ${parsed.data.message || "Not provided"}`,
+          "",
+          `Record ID: ${enquiryId}`
+        ].join("\n")
+      }),
+      sendDonorEmail(parsed.data.email, {
+        subject: `Your RDIY donation instructions: ${reference}`,
+        text: [
+          `Hello ${parsed.data.fullName},`,
+          "",
+          "Thank you for choosing to support RDIY. Complete your donation using the verified bank details below.",
+          "",
+          `Amount: ${formattedAmount}`,
+          `Bank: ${bankTransferDetails.bankName}`,
+          `Account name: ${bankTransferDetails.accountName}`,
+          `Account number: ${bankTransferDetails.accountNumber}`,
+          `Donation reference: ${reference}`,
+          "",
+          "Use the RDIY donation reference as the transfer narration or description. After transferring, return to the RDIY donation page and submit your bank transaction reference.",
+          "",
+          "Your donation remains pending until RDIY verifies it against the receiving bank account. RDIY will never ask for your bank password, PIN, OTP, or card security code.",
+          "",
+          "Restoration and Development Initiative for Youth"
+        ].join("\n")
+      })
+    ]);
+    const emailStatus = combineEmailStatuses([staffEmailStatus, donorEmailStatus]);
 
     await sql`
       UPDATE donation_enquiries
@@ -66,10 +90,14 @@ export default async function handler(request: VercelRequest, response: VercelRe
 
     sendJson(response, 201, {
       ok: true,
-      message: "Your donation enquiry has been recorded. No payment has been taken.",
+      message: "Your donation reference is ready. No payment has been taken yet.",
       reference,
-      instructions: config.donationInstructions()
-        || "RDIY will contact you with verified transfer instructions."
+      emailSent: donorEmailStatus === "sent",
+      bankTransfer: {
+        ...bankTransferDetails,
+        amount: parsed.data.amount.toFixed(2),
+        reference
+      }
     });
   } catch (error) {
     console.error("Donation enquiry failed", error instanceof Error ? error.name : "UnknownError");

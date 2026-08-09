@@ -1,5 +1,5 @@
 import { db } from "../server/db.js";
-import { sendStaffEmail } from "../server/email.js";
+import { combineEmailStatuses, sendDonorEmail, sendStaffEmail } from "../server/email.js";
 import { preparePost, readBody, sendJson } from "../server/http.js";
 import { consumeRateLimit, isHoneypotTriggered } from "../server/security.js";
 import { donationConfirmationSchema, validationMessage } from "../server/validation.js";
@@ -28,7 +28,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     const sql = db();
     const rows = await sql`
       WITH target AS (
-        SELECT id FROM donation_enquiries WHERE public_reference = ${parsed.data.donationReference}
+        SELECT id, email FROM donation_enquiries WHERE public_reference = ${parsed.data.donationReference}
       ), inserted AS (
         INSERT INTO donation_transfer_reports (
           donation_enquiry_id, provider, transaction_reference, sender_name
@@ -40,7 +40,9 @@ export default async function handler(request: VercelRequest, response: VercelRe
       UPDATE donation_enquiries
       SET status = 'pending_verification', updated_at = NOW()
       WHERE id IN (SELECT donation_enquiry_id FROM inserted)
-      RETURNING (SELECT id FROM inserted) AS report_id
+      RETURNING
+        (SELECT id FROM inserted) AS report_id,
+        (SELECT email FROM target) AS donor_email
     `;
 
     const reportId = rows[0]?.report_id ? String(rows[0].report_id) : null;
@@ -49,18 +51,38 @@ export default async function handler(request: VercelRequest, response: VercelRe
       return;
     }
 
-    const emailStatus = await sendStaffEmail({
+    const donorEmail = rows[0]?.donor_email ? String(rows[0].donor_email) : null;
+    const emailTasks = [sendStaffEmail({
       subject: `Donation transfer report: ${parsed.data.donationReference}`,
       text: [
-        "A donor reported a manual transfer. This report must be verified against the receiving account.",
+        "A donor reported a manual bank transfer. This report must be verified against the receiving account.",
         "",
         `RDIY reference: ${parsed.data.donationReference}`,
-        `Provider: ${parsed.data.provider}`,
         `Provider transaction reference: ${parsed.data.transactionReference}`,
         `Sender name: ${parsed.data.senderName}`,
         `Report ID: ${reportId}`
       ].join("\n")
-    });
+    })];
+
+    if (donorEmail) {
+      emailTasks.push(sendDonorEmail(donorEmail, {
+        subject: `RDIY received your transfer report: ${parsed.data.donationReference}`,
+        text: [
+          "Thank you. RDIY has received your bank-transfer report.",
+          "",
+          `RDIY donation reference: ${parsed.data.donationReference}`,
+          `Bank transaction reference: ${parsed.data.transactionReference}`,
+          `Sender name: ${parsed.data.senderName}`,
+          "",
+          "The donation is pending verification against RDIY's Ecobank account. This message is an acknowledgement, not a payment receipt.",
+          "",
+          "Restoration and Development Initiative for Youth"
+        ].join("\n")
+      }));
+    }
+
+    const emailStatuses = await Promise.all(emailTasks);
+    const emailStatus = combineEmailStatuses(emailStatuses);
 
     await sql`
       UPDATE donation_transfer_reports
@@ -70,7 +92,8 @@ export default async function handler(request: VercelRequest, response: VercelRe
 
     sendJson(response, 201, {
       ok: true,
-      message: "Your transfer report has been recorded for manual verification. This is not yet a payment confirmation."
+      message: "Your bank-transfer report has been recorded for manual verification. This is not yet a payment confirmation.",
+      emailSent: donorEmail ? emailStatuses[1] === "sent" : false
     });
   } catch (error) {
     const errorCode = typeof error === "object" && error && "code" in error ? String(error.code) : "";

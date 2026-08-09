@@ -7,8 +7,8 @@ The Restoration & Development Initiative for Youth website is a Vercel-native mu
 - Vite builds the six static HTML pages and browser TypeScript.
 - Vercel Functions under `api/` process public forms.
 - Neon PostgreSQL stores messages, newsletter requests, donation enquiries, transfer reports, and rate-limit counters.
-- Resend sends staff notifications after records have been stored.
-- Donations use manual, staff-verified bank or mobile-money transfers. The application never collects payment credentials and never marks a reported transfer as confirmed automatically.
+- Resend sends staff notifications and donor acknowledgements after records have been stored.
+- Donations use guided, staff-verified bank transfers to RDIY's Ecobank account. The application never collects payment credentials and never marks a reported transfer as confirmed automatically.
 
 ## Requirements
 
@@ -51,7 +51,6 @@ The Restoration & Development Initiative for Youth website is a Vercel-native mu
 | `CONTACT_TO_EMAIL` | No | Staff notification recipient; defaults to `rdiy.sl.org@gmail.com` |
 | `RESEND_FROM_EMAIL` | No | Verified sender; defaults to Resend's onboarding sender |
 | `ALLOWED_ORIGINS` | No | Extra comma-separated form origins |
-| `DONATION_INSTRUCTIONS` | No | Public transfer guidance returned with a donation reference |
 
 Never prefix server secrets with `VITE_`; Vite-prefixed variables are exposed to browsers.
 
@@ -65,15 +64,16 @@ Newsletter signups remain `pending` until RDIY owns and verifies a sending domai
 
 ## Donation workflow
 
-1. The donor submits an enquiry.
-2. The backend creates a non-sequential `RDIY-YEAR-XXXXXX` reference.
-3. The donor receives only the public instructions configured in `DONATION_INSTRUCTIONS`.
-4. After transferring externally, the donor reports the provider transaction reference.
-5. The report is stored as pending verification.
-6. Staff compares it with the receiving bank or mobile-money account.
-7. Only staff may mark it confirmed directly in Neon until a protected admin interface is added.
+1. The donor enters their details and intended SLE amount.
+2. The backend creates a non-sequential `RDIY-YEAR-XXXXXX` reference and stores the enquiry as `awaiting_transfer`.
+3. The site displays RDIY's verified Ecobank account details and attempts to email the same instructions to the donor.
+4. The donor transfers through their own bank app or online banking and uses the RDIY reference as the narration.
+5. The donor reports the bank transaction reference on the donation page.
+6. The report is stored as `pending_verification`, and staff receives a notification.
+7. Staff independently compares the report with the receiving Ecobank statement.
+8. Only staff may mark it confirmed directly in Neon until a protected admin interface is added.
 
-Never place wallet PINs, card information, CVVs, OTPs, API secrets, or private bank credentials in `DONATION_INSTRUCTIONS`.
+The public receiving details live in `server/donations.ts`. Never add online-banking credentials, PINs, card information, CVVs, OTPs, API secrets, or any private bank credential there.
 
 ## Commands
 

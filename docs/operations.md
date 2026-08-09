@@ -5,16 +5,18 @@
 1. Review `contact_messages` records with status `new`.
 2. Confirm the message is legitimate before following external links or opening attachments received later by email.
 3. Set the status to `read`, `replied`, or `archived` as work progresses.
-4. A `failed` or `not_configured` notification status means the database record exists but staff email was not delivered.
+4. A `failed` or `not_configured` notification status means the database record exists but one or more related emails were not delivered.
 
 ## Manual donation verification
 
 1. Find the enquiry by `public_reference`.
 2. Review related `donation_transfer_reports`.
-3. Sign in to the official receiving bank or mobile-money account independently. Never use a link provided by the donor.
+3. Sign in to RDIY's official Ecobank account independently. Never use a link provided by the donor.
 4. Match the actual provider reference, sender, amount, currency, and receipt time.
 5. If every value matches, update the report and enquiry to `confirmed` and record the staff verifier and time.
 6. If values do not match, mark the report `rejected`; do not disclose internal account information.
+
+The public receiving account configured in `server/donations.ts` must be changed only after RDIY leadership verifies replacement instructions directly with Ecobank. Test the complete donation flow after any change.
 
 A screenshot, SMS, email, or submitted reference is not proof of payment. Only the receiving account statement is authoritative.
 

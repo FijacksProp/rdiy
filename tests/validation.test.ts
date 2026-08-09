@@ -79,7 +79,7 @@ describe("public form validation", () => {
     expect(newsletterSchema.safeParse({ email: "reader@example.com", consent: "yes", website: "" }).success).toBe(true);
   });
 
-  it("accepts a blank donation amount but rejects a negative amount", () => {
+  it("requires a positive donation amount", () => {
     const base = {
       fullName: "Donor Name",
       email: "donor@example.com",
@@ -89,14 +89,15 @@ describe("public form validation", () => {
       website: ""
     };
 
-    expect(donationSchema.parse({ ...base, amount: "" }).amount).toBeNull();
+    expect(donationSchema.safeParse({ ...base, amount: "" }).success).toBe(false);
     expect(donationSchema.safeParse({ ...base, amount: "-1" }).success).toBe(false);
+    expect(donationSchema.parse({ ...base, amount: "250" }).amount).toBe(250);
   });
 
   it("normalizes valid donation references", () => {
     const result = donationConfirmationSchema.parse({
       donationReference: "rdiy-2026-a1b2c3",
-      provider: "orange-money",
+      provider: "bank-transfer",
       transactionReference: "TX-100",
       senderName: "Example Person",
       website: ""

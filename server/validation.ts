@@ -73,8 +73,8 @@ export const donationSchema = z.object({
   email: z.string().trim().email().max(254).transform((email) => email.toLowerCase()),
   phone: optionalText(30),
   amount: z.preprocess(
-    (value) => value === "" || value === undefined ? null : Number(value),
-    z.number().positive().max(100_000_000).nullable()
+    (value) => value === "" || value === undefined ? Number.NaN : Number(value),
+    z.number().positive().max(100_000_000)
   ),
   purpose: z.enum(["general", "skills-development", "rehabilitation", "entrepreneurship", "agriculture"]),
   message: optionalText(2000),
@@ -83,7 +83,7 @@ export const donationSchema = z.object({
 
 export const donationConfirmationSchema = z.object({
   donationReference: z.string().trim().toUpperCase().regex(/^RDIY-\d{4}-[A-F0-9]{6}$/),
-  provider: z.enum(["orange-money", "afrimoney", "bank-transfer", "other"]),
+  provider: z.literal("bank-transfer"),
   transactionReference: trimmed(120),
   senderName: trimmed(120),
   website: honeypot

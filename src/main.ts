@@ -4,7 +4,15 @@ interface ApiResponse {
   ok: boolean;
   message: string;
   reference?: string;
-  instructions?: string;
+  emailSent?: boolean;
+  bankTransfer?: {
+    bankName: string;
+    accountName: string;
+    accountNumber: string;
+    currency: string;
+    amount: string;
+    reference: string;
+  };
 }
 
 const toggle = document.getElementById("menu-toggle");
@@ -123,6 +131,91 @@ function setFormState(status: HTMLElement | null, message: string, state: "succe
   status.classList.add(`is-${state}`);
 }
 
+type BankTransferDetails = NonNullable<ApiResponse["bankTransfer"]>;
+
+function showBankTransferDetails(details: BankTransferDetails): void {
+  const panel = document.getElementById("bank-transfer-panel");
+  if (!(panel instanceof HTMLElement)) return;
+
+  Object.entries(details).forEach(([field, value]) => {
+    const target = panel.querySelector<HTMLElement>(`[data-bank-transfer-field="${field}"]`);
+    if (target) target.textContent = value;
+  });
+
+  panel.hidden = false;
+  panel.focus({ preventScroll: true });
+  panel.scrollIntoView({
+    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    block: "start"
+  });
+}
+
+async function copyText(value: string): Promise<void> {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(value);
+    return;
+  }
+
+  const fallback = document.createElement("textarea");
+  fallback.value = value;
+  fallback.setAttribute("readonly", "");
+  fallback.style.position = "fixed";
+  fallback.style.opacity = "0";
+  document.body.append(fallback);
+  fallback.select();
+  const copied = document.execCommand("copy");
+  fallback.remove();
+  if (!copied) throw new Error("Copy failed");
+}
+
+function setupBankDetailCopies(): void {
+  const panel = document.getElementById("bank-transfer-panel");
+  const copyStatus = document.getElementById("bank-copy-status");
+  if (!(panel instanceof HTMLElement)) return;
+
+  const setCopyStatus = (message: string, isError = false) => {
+    if (!copyStatus) return;
+    copyStatus.textContent = message;
+    copyStatus.classList.toggle("is-error", isError);
+  };
+
+  panel.querySelectorAll<HTMLButtonElement>("[data-copy-transfer-field]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const field = button.dataset.copyTransferField;
+      const target = field
+        ? panel.querySelector<HTMLElement>(`[data-bank-transfer-field="${field}"]`)
+        : null;
+      if (!target) return;
+
+      try {
+        await copyText(target.textContent?.trim() ?? "");
+        setCopyStatus(`${button.textContent?.trim() || "Detail"} copied.`);
+      } catch {
+        setCopyStatus("Copying was blocked. Please press and hold the detail to copy it.", true);
+      }
+    });
+  });
+
+  panel.querySelector<HTMLButtonElement>("[data-copy-bank-transfer]")?.addEventListener("click", async () => {
+    const value = [
+      `Amount: ${panel.querySelector<HTMLElement>('[data-bank-transfer-field="amount"]')?.textContent?.trim()} ${panel.querySelector<HTMLElement>('[data-bank-transfer-field="currency"]')?.textContent?.trim()}`,
+      `Bank: ${panel.querySelector<HTMLElement>('[data-bank-transfer-field="bankName"]')?.textContent?.trim()}`,
+      `Account name: ${panel.querySelector<HTMLElement>('[data-bank-transfer-field="accountName"]')?.textContent?.trim()}`,
+      `Account number: ${panel.querySelector<HTMLElement>('[data-bank-transfer-field="accountNumber"]')?.textContent?.trim()}`,
+      `Reference: ${panel.querySelector<HTMLElement>('[data-bank-transfer-field="reference"]')?.textContent?.trim()}`
+    ].join("\n");
+
+    try {
+      await copyText(value);
+      setCopyStatus("All transfer details copied.");
+    } catch {
+      setCopyStatus("Copying was blocked. Please copy each detail individually.", true);
+    }
+  });
+}
+
+setupBankDetailCopies();
+
 async function submitApiForm(form: HTMLFormElement, formType: FormType): Promise<void> {
   const status = getStatusElement(form, formType);
   const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
@@ -156,13 +249,23 @@ async function submitApiForm(form: HTMLFormElement, formType: FormType): Promise
 
     let message = result.message;
     if (result.reference) message += ` Your reference is ${result.reference}.`;
-    if (result.instructions) message += ` ${result.instructions}`;
+    if (formType === "donation" && result.bankTransfer) {
+      message += result.emailSent
+        ? " The same instructions have been emailed to you."
+        : " Please save or copy the transfer details shown below.";
+      showBankTransferDetails(result.bankTransfer);
+    }
 
     setFormState(status, message, "success");
 
     if (formType === "donation" && result.reference) {
       const confirmationReference = document.getElementById("confirmation-donation-reference");
       if (confirmationReference instanceof HTMLInputElement) confirmationReference.value = result.reference;
+
+      const confirmationSender = document.getElementById("confirmation-sender-name");
+      if (confirmationSender instanceof HTMLInputElement && typeof payload.fullName === "string") {
+        confirmationSender.value = payload.fullName;
+      }
     }
 
     form.reset();
