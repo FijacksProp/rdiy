@@ -279,9 +279,10 @@ async function submitApiForm(form: HTMLFormElement, formType: FormType, submitte
 
   const payload = Object.fromEntries(new FormData(form).entries());
   const isMonimeCheckout = formType === "donation" && submitter?.dataset.donationFlow !== "bank";
-  const endpoint = submitter instanceof HTMLButtonElement && submitter.formAction
-    ? submitter.formAction
-    : form.action;
+  const submitterAction = submitter instanceof HTMLButtonElement
+    ? submitter.getAttribute("formaction")?.trim()
+    : null;
+  const endpoint = submitterAction || form.action;
   setFormState(status, isMonimeCheckout ? "Preparing secure checkout…" : "Submitting…", "pending");
 
   if (submitButton) {
