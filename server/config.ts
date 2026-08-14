@@ -15,11 +15,11 @@ export const config = {
   monimeFinancialAccountId: () => process.env.MONIME_FINANCIAL_ACCOUNT_ID?.trim() || null,
   monimeWebhookSecret: () => process.env.MONIME_WEBHOOK_SECRET?.trim() || null,
   monimeApiVersion: () => process.env.MONIME_API_VERSION?.trim() || "caph.2025-08-23",
-  monimePaymentMethods: () => new Set((process.env.MONIME_PAYMENT_METHODS || "momo,bank,card")
+  monimePaymentMethods: () => new Set((process.env.MONIME_PAYMENT_METHODS || "momo")
     .split(",")
     .map((method) => method.trim().toLowerCase())
     .filter(Boolean)),
-  monimeMomoProviders: () => (process.env.MONIME_MOMO_PROVIDERS || "")
+  monimeMomoProviders: () => (process.env.MONIME_MOMO_PROVIDERS || "m17,m18")
     .split(",")
     .map((provider) => provider.trim())
     .filter(Boolean),

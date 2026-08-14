@@ -67,8 +67,8 @@ export default async function handler(request: VercelRequest, response: VercelRe
         amountMinor,
         purposeLabel: donationPurposeLabels[parsed.data.purpose] ?? parsed.data.purpose,
         idempotencyKey,
-        successUrl: `${baseUrl}/donate.html?payment=return&reference=${encodedReference}#payment-result`,
-        cancelUrl: `${baseUrl}/donate.html?payment=cancelled&reference=${encodedReference}#payment-result`
+        successUrl: `${baseUrl}/api/payment-return?payment=return&reference=${encodedReference}`,
+        cancelUrl: `${baseUrl}/api/payment-return?payment=cancelled&reference=${encodedReference}`
       });
       if (!checkout.id || !checkout.redirectUrl) throw new Error("Monime did not return a checkout URL.");
 
