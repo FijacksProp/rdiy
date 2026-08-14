@@ -10,6 +10,24 @@ export const config = {
   resendApiKey: () => process.env.RESEND_API_KEY?.trim() || null,
   contactToEmail: () => process.env.CONTACT_TO_EMAIL?.trim() || "rdiy.sl.org@gmail.com",
   resendFromEmail: () => process.env.RESEND_FROM_EMAIL?.trim() || "RDIY Website <onboarding@resend.dev>",
+  monimeAccessToken: () => process.env.MONIME_ACCESS_TOKEN?.trim() || null,
+  monimeSpaceId: () => process.env.MONIME_SPACE_ID?.trim() || null,
+  monimeFinancialAccountId: () => process.env.MONIME_FINANCIAL_ACCOUNT_ID?.trim() || null,
+  monimeWebhookSecret: () => process.env.MONIME_WEBHOOK_SECRET?.trim() || null,
+  monimeApiVersion: () => process.env.MONIME_API_VERSION?.trim() || "caph.2025-08-23",
+  monimePaymentMethods: () => new Set((process.env.MONIME_PAYMENT_METHODS || "momo,bank,card")
+    .split(",")
+    .map((method) => method.trim().toLowerCase())
+    .filter(Boolean)),
+  monimeMomoProviders: () => (process.env.MONIME_MOMO_PROVIDERS || "")
+    .split(",")
+    .map((provider) => provider.trim())
+    .filter(Boolean),
+  monimeBankProviders: () => (process.env.MONIME_BANK_PROVIDERS || "")
+    .split(",")
+    .map((provider) => provider.trim())
+    .filter(Boolean),
+  publicSiteUrl: () => process.env.PUBLIC_SITE_URL?.trim().replace(/\/$/, "") || null,
   allowedOrigins: () => (process.env.ALLOWED_ORIGINS || "")
     .split(",")
     .map((origin) => origin.trim())

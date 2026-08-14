@@ -74,11 +74,15 @@ export const donationSchema = z.object({
   phone: optionalText(30),
   amount: z.preprocess(
     (value) => value === "" || value === undefined ? Number.NaN : Number(value),
-    z.number().positive().max(100_000_000)
+    z.number().positive().max(100_000_000).multipleOf(0.01)
   ),
   purpose: z.enum(["general", "skills-development", "rehabilitation", "entrepreneurship", "agriculture"]),
   message: optionalText(2000),
   website: honeypot
+});
+
+export const donationStatusSchema = z.object({
+  reference: z.string().trim().toUpperCase().regex(/^RDIY-\d{4}-[A-F0-9]{6}$/)
 });
 
 export const donationConfirmationSchema = z.object({

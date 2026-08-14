@@ -20,6 +20,15 @@ The public receiving account configured in `server/donations.ts` must be changed
 
 A screenshot, SMS, email, or submitted reference is not proof of payment. Only the receiving account statement is authoritative.
 
+## Monime online donations
+
+- Treat Neon and the Monime Space transaction list as the reconciliation sources.
+- The public return page is informational; only a server-to-server Monime status check can confirm payment.
+- If a record remains `pending`, locate its `checkout_session_id` in `donation_payments` and compare it with Monime.
+- Never manually change an online donation to `confirmed` without matching the Monime checkout, amount, currency, and RDIY reference.
+- Rotate `MONIME_ACCESS_TOKEN` and `MONIME_WEBHOOK_SECRET` immediately if either is exposed.
+- A `receipt_status` of `failed` does not reverse a confirmed payment; it means the acknowledgement must be resent separately after checking Resend.
+
 ## Newsletter handling
 
 - Keep new subscribers in `pending` status until confirmation email delivery is available.

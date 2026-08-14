@@ -135,18 +135,18 @@
             <div class="donation-cards">
                 <div class="donation-card">
                     <h3>
-                        One-Time Donation
+                        Secure Online Donation
                     </h3>
                     <p>
-                        Make a single contribution to support our programs.
+                        Pay through Monime using an available mobile-money, bank, or card option.
                     </p>
                 </div>
                 <div class="donation-card">
                     <h3>
-                        Monthly Giving
+                        Direct Bank Transfer
                     </h3>
                     <p>
-                        Become a recurring supporter and create long-term impact.
+                        Use RDIY's verified Ecobank details and submit your transfer reference for verification.
                     </p>
                 </div>
                 <div class="donation-card">
@@ -160,18 +160,28 @@
             </div>
         </div>
     </section>
+    <section class="payment-result" id="payment-result" aria-live="polite" hidden>
+        <div class="container">
+            <div class="payment-result-card">
+                <span class="transfer-step">Payment update</span>
+                <h2>Your Donation Status</h2>
+                <p class="form-status is-pending" id="payment-result-message" role="status"></p>
+                <a href="#donation-form">Return to the donation form</a>
+            </div>
+        </div>
+    </section>
     <section class="donation-form" id="donation-form">
         <div class="container">
             <div class="section-heading">
-                <span>Step 1</span>
+                <span>Donate Securely</span>
                 <h2>
-                    Create Your Donation Reference
+                    Make Your Contribution
                 </h2>
             </div>
             <p class="form-notice" id="donation-notice">
-                Enter the amount you intend to transfer. We will create a unique reference and show RDIY's verified Ecobank details. This form does not take payment. Never enter a card number, PIN, CVV, bank password, or one-time password here. See our <a href="privacy.html">privacy notice</a>.
+                Enter your donation details, then continue to Monime's secure checkout to choose an available payment method. RDIY never receives your card number, PIN, wallet password, or one-time code. You can also choose direct Ecobank transfer below. See our <a href="privacy.html">privacy notice</a>.
             </p>
-            <form action="/api/donation-enquiries" method="post" data-api-form="donation" aria-describedby="donation-notice donation-status">
+            <form action="/api/monime-checkout" method="post" data-api-form="donation" aria-describedby="donation-notice donation-status">
                 <div class="form-trap" aria-hidden="true">
                     <label for="donation-website">Website</label>
                     <input id="donation-website" name="website" type="text" tabindex="-1" autocomplete="off">
@@ -266,9 +276,15 @@
                         maxlength="2000"
                     ></textarea>
                 </div>
-                <button type="submit">
-                    Generate Bank Transfer Details
-                </button>
+                <div class="donation-submit-options">
+                    <button type="submit" data-donation-flow="monime">
+                        Continue to Secure Payment
+                    </button>
+                    <button type="submit" class="bank-transfer-choice" formaction="/api/donation-enquiries" data-donation-flow="bank">
+                        Use Direct Bank Transfer Instead
+                    </button>
+                </div>
+                <p class="payment-provider-note"><i class="fas fa-shield-halved" aria-hidden="true"></i> Online checkout is securely hosted by Monime. Available payment methods are shown on the next page.</p>
                 <p class="form-status" id="donation-status" role="status" aria-live="polite"></p>
             </form>
             <div class="bank-transfer-panel" id="bank-transfer-panel" tabindex="-1" aria-labelledby="bank-transfer-heading" hidden>

@@ -91,6 +91,7 @@ describe("public form validation", () => {
 
     expect(donationSchema.safeParse({ ...base, amount: "" }).success).toBe(false);
     expect(donationSchema.safeParse({ ...base, amount: "-1" }).success).toBe(false);
+    expect(donationSchema.safeParse({ ...base, amount: "1.001" }).success).toBe(false);
     expect(donationSchema.parse({ ...base, amount: "250" }).amount).toBe(250);
   });
 

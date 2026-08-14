@@ -5,6 +5,10 @@ interface ApiResponse {
   message: string;
   reference?: string;
   emailSent?: boolean;
+  checkoutUrl?: string;
+  status?: "pending" | "completed" | "failed" | "cancelled" | "expired";
+  amount?: string;
+  currency?: string;
   bankTransfer?: {
     bankName: string;
     accountName: string;
@@ -216,9 +220,12 @@ function setupBankDetailCopies(): void {
 
 setupBankDetailCopies();
 
-async function submitApiForm(form: HTMLFormElement, formType: FormType): Promise<void> {
+async function submitApiForm(form: HTMLFormElement, formType: FormType, submitter?: HTMLElement | null): Promise<void> {
   const status = getStatusElement(form, formType);
-  const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const submitButton = submitter instanceof HTMLButtonElement
+    ? submitter
+    : form.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const submitButtons = Array.from(form.querySelectorAll<HTMLButtonElement>('button[type="submit"]'));
   const originalButtonText = submitButton?.textContent ?? "Submit";
 
   if (!form.checkValidity()) {
@@ -227,15 +234,19 @@ async function submitApiForm(form: HTMLFormElement, formType: FormType): Promise
   }
 
   const payload = Object.fromEntries(new FormData(form).entries());
-  setFormState(status, "Submitting…", "pending");
+  const isMonimeCheckout = formType === "donation" && submitter?.dataset.donationFlow !== "bank";
+  const endpoint = submitter instanceof HTMLButtonElement && submitter.formAction
+    ? submitter.formAction
+    : form.action;
+  setFormState(status, isMonimeCheckout ? "Preparing secure checkout…" : "Submitting…", "pending");
 
   if (submitButton) {
-    submitButton.disabled = true;
-    submitButton.textContent = "Submitting…";
+    submitButtons.forEach((button) => { button.disabled = true; });
+    submitButton.textContent = isMonimeCheckout ? "Preparing checkout…" : "Submitting…";
   }
 
   try {
-    const response = await fetch(form.action, {
+    const response = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Accept": "application/json",
@@ -246,6 +257,13 @@ async function submitApiForm(form: HTMLFormElement, formType: FormType): Promise
 
     const result = await response.json() as ApiResponse;
     if (!response.ok || !result.ok) throw new Error(result.message || "The request could not be completed.");
+
+    if (isMonimeCheckout) {
+      if (!result.checkoutUrl) throw new Error("The secure checkout link was not returned. Please try again.");
+      setFormState(status, "Secure checkout is ready. Redirecting to Monime…", "success");
+      window.location.assign(result.checkoutUrl);
+      return;
+    }
 
     let message = result.message;
     if (result.reference) message += ` Your reference is ${result.reference}.`;
@@ -276,7 +294,7 @@ async function submitApiForm(form: HTMLFormElement, formType: FormType): Promise
     setFormState(status, message, "error");
   } finally {
     if (submitButton) {
-      submitButton.disabled = false;
+      submitButtons.forEach((button) => { button.disabled = false; });
       submitButton.textContent = originalButtonText.trim();
     }
   }
@@ -285,6 +303,61 @@ async function submitApiForm(form: HTMLFormElement, formType: FormType): Promise
 document.querySelectorAll<HTMLFormElement>("[data-api-form]").forEach((form) => {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    void submitApiForm(form, form.dataset.apiForm as FormType);
+    const submitter = event instanceof SubmitEvent && event.submitter instanceof HTMLElement
+      ? event.submitter
+      : null;
+    void submitApiForm(form, form.dataset.apiForm as FormType, submitter);
   });
 });
+
+function paymentStatusMessage(status: ApiResponse["status"], reference: string): { message: string; state: "success" | "error" | "pending" } {
+  switch (status) {
+    case "completed":
+      return { message: `Thank you. Your donation ${reference} has been confirmed. A receipt will be emailed to you.`, state: "success" };
+    case "failed":
+      return { message: `Payment ${reference} was not completed. No successful donation was recorded. You can try again below.`, state: "error" };
+    case "cancelled":
+      return { message: `Checkout ${reference} was cancelled. No payment was taken.`, state: "error" };
+    case "expired":
+      return { message: `Checkout ${reference} expired before payment. Please start a new donation.`, state: "error" };
+    default:
+      return { message: `Payment ${reference} is still being confirmed. This page will check again automatically.`, state: "pending" };
+  }
+}
+
+async function showReturnedPaymentStatus(): Promise<void> {
+  const panel = document.getElementById("payment-result");
+  const message = document.getElementById("payment-result-message");
+  if (!(panel instanceof HTMLElement) || !(message instanceof HTMLElement)) return;
+
+  const parameters = new URLSearchParams(window.location.search);
+  const paymentReturn = parameters.get("payment");
+  const reference = parameters.get("reference")?.trim().toUpperCase();
+  if (!paymentReturn || !reference) return;
+
+  panel.hidden = false;
+  if (paymentReturn === "cancelled") {
+    const display = paymentStatusMessage("cancelled", reference);
+    setFormState(message, display.message, display.state);
+    return;
+  }
+
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    try {
+      const response = await fetch(`/api/donation-status?reference=${encodeURIComponent(reference)}`, {
+        headers: { "Accept": "application/json" },
+        cache: "no-store"
+      });
+      const result = await response.json() as ApiResponse;
+      if (!response.ok || !result.ok) throw new Error(result.message);
+      const display = paymentStatusMessage(result.status, reference);
+      setFormState(message, display.message, display.state);
+      if (result.status !== "pending") return;
+    } catch {
+      setFormState(message, `We have your reference ${reference}, but confirmation is temporarily unavailable. Please check again shortly.`, "pending");
+    }
+    await new Promise((resolve) => window.setTimeout(resolve, 3_000));
+  }
+}
+
+void showReturnedPaymentStatus();
