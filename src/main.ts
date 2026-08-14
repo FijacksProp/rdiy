@@ -19,6 +19,50 @@ interface ApiResponse {
   };
 }
 
+function responseFailureMessage(response: Response, requestId: string | null): string {
+  const supportReference = requestId ? ` Support reference: ${requestId}.` : "";
+
+  switch (response.status) {
+    case 404:
+      return `The website could not find the requested service (HTTP 404). Please refresh the page and try again.${supportReference}`;
+    case 500:
+      return `The server encountered an error while processing this request (HTTP 500). Please try again shortly.${supportReference}`;
+    case 502:
+      return `The payment service could not be reached correctly (HTTP 502). Please try again or use bank transfer.${supportReference}`;
+    case 503:
+      return `The payment service is temporarily unavailable (HTTP 503). Please try again or use bank transfer.${supportReference}`;
+    case 504:
+      return `The payment request timed out (HTTP 504). Please wait a moment before trying again.${supportReference}`;
+    default:
+      return `The server returned an invalid response (HTTP ${response.status}). Please try again shortly.${supportReference}`;
+  }
+}
+
+async function readApiResponse(response: Response): Promise<ApiResponse> {
+  const requestId = response.headers.get("x-vercel-id");
+  const body = await response.text();
+
+  if (!body.trim()) throw new Error(responseFailureMessage(response, requestId));
+
+  let result: unknown;
+  try {
+    result = JSON.parse(body) as unknown;
+  } catch {
+    throw new Error(responseFailureMessage(response, requestId));
+  }
+
+  if (
+    typeof result !== "object"
+    || result === null
+    || typeof (result as Partial<ApiResponse>).ok !== "boolean"
+    || typeof (result as Partial<ApiResponse>).message !== "string"
+  ) {
+    throw new Error(responseFailureMessage(response, requestId));
+  }
+
+  return result as ApiResponse;
+}
+
 const toggle = document.getElementById("menu-toggle");
 const nav = document.getElementById("nav");
 
@@ -255,7 +299,7 @@ async function submitApiForm(form: HTMLFormElement, formType: FormType, submitte
       body: JSON.stringify(payload)
     });
 
-    const result = await response.json() as ApiResponse;
+    const result = await readApiResponse(response);
     if (!response.ok || !result.ok) throw new Error(result.message || "The request could not be completed.");
 
     if (isMonimeCheckout) {
@@ -348,7 +392,7 @@ async function showReturnedPaymentStatus(): Promise<void> {
         headers: { "Accept": "application/json" },
         cache: "no-store"
       });
-      const result = await response.json() as ApiResponse;
+      const result = await readApiResponse(response);
       if (!response.ok || !result.ok) throw new Error(result.message);
       const display = paymentStatusMessage(result.status, reference);
       setFormState(message, display.message, display.state);
