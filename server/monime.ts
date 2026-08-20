@@ -93,18 +93,17 @@ async function monimeRequest<T>(path: string, init: RequestInit): Promise<T> {
 }
 
 function paymentOptions(): Record<string, unknown> {
-  const methods = config.monimePaymentMethods();
   const momoProviders = config.monimeMomoProviders();
   const bankProviders = config.monimeBankProviders();
 
   return {
-    card: { disable: !methods.has("card") },
+    card: { disable: false },
     bank: {
-      disable: !methods.has("bank"),
+      disable: false,
       ...(bankProviders.length ? { enabledProviders: bankProviders } : {})
     },
     momo: {
-      disable: !methods.has("momo"),
+      disable: false,
       ...(momoProviders.length ? { enabledProviders: momoProviders } : {})
     },
     wallet: { disable: true }

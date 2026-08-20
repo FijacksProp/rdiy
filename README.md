@@ -56,7 +56,6 @@ The Restoration & Development Initiative for Youth website is a Vercel-native mu
 | `MONIME_FINANCIAL_ACCOUNT_ID` | No | Specific settlement account; the Space main account is used when omitted |
 | `MONIME_WEBHOOK_SECRET` | For online payments | Secret expected in Monime's `x-rdiy-webhook-secret` custom header |
 | `MONIME_API_VERSION` | No | Defaults to `caph.2025-08-23` |
-| `MONIME_PAYMENT_METHODS` | No | Comma-separated `momo`, `bank`, and/or `card` methods |
 | `MONIME_MOMO_PROVIDERS` | No | Optional provider allow-list, such as `m17,m18` |
 | `MONIME_BANK_PROVIDERS` | No | Optional Monime bank-provider allow-list |
 | `PUBLIC_SITE_URL` | Production | Canonical HTTPS origin used for checkout return URLs |

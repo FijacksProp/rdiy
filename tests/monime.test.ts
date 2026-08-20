@@ -5,7 +5,6 @@ afterEach(() => {
   vi.unstubAllGlobals();
   delete process.env.MONIME_ACCESS_TOKEN;
   delete process.env.MONIME_SPACE_ID;
-  delete process.env.MONIME_PAYMENT_METHODS;
   delete process.env.MONIME_MOMO_PROVIDERS;
 });
 
@@ -13,7 +12,6 @@ describe("Monime checkout API client", () => {
   it("keeps credentials server-side and creates a restricted hosted checkout", async () => {
     process.env.MONIME_ACCESS_TOKEN = "mon_test_example";
     process.env.MONIME_SPACE_ID = "spc-example";
-    process.env.MONIME_PAYMENT_METHODS = "momo";
     process.env.MONIME_MOMO_PROVIDERS = "m17";
     const fetchMock = vi.fn(async () => new Response(JSON.stringify({
       success: true,
@@ -42,7 +40,7 @@ describe("Monime checkout API client", () => {
     const body = JSON.parse(String(init.body)) as Record<string, any>;
     expect(body.lineItems[0].price).toEqual({ currency: "SLE", value: 25_000 });
     expect(body.paymentOptions.momo).toEqual({ disable: false, enabledProviders: ["m17"] });
-    expect(body.paymentOptions.bank.disable).toBe(true);
-    expect(body.paymentOptions.card.disable).toBe(true);
+    expect(body.paymentOptions.bank.disable).toBe(false);
+    expect(body.paymentOptions.card.disable).toBe(false);
   });
 });
